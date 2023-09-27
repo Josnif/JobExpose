@@ -1,24 +1,59 @@
-import { Stack } from 'expo-router';
-import { useCallback } from 'react';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import { Stack, Slot, useRouter, useSegments } from 'expo-router';
+import useCachedResources from '../hook/useCachedResources'
 
-SplashScreen.preventAutoHideAsync();
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-export default function Layout() {
-  const [fontsLoaded] = useFonts({
-    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
-    DMMedium: require("../assets/fonts/DMSans-Medium.ttf"),
-    DMRegular: require("../assets/fonts/DMSans-Regular.ttf"),
-  })
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+// Cache the Clerk JWT
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (error) {
+      return null;
     }
-  }, [fontsLoaded])
+  },
+  async setToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (error) {
+      return;
+    }
+  }
+};
 
-  if (!fontsLoaded) return null;
+const InitialLayout = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+	const segments = useSegments();
+	const router = useRouter();
 
-  return <Stack onLayout={onLayoutRootView} />;
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const inTabsGroup = segments[0] === '(auth)';
+    if (isSignedIn && !inTabsGroup) {
+      router.replace('/home');
+    } else if (!isSignedIn) {
+      router.replace('/login');
+    }
+
+  }, [isSignedIn])
+
+  return <Slot />;
+}
+
+export default function RootLayout() {
+  const isLoadingComplete = useCachedResources();
+
+  if (!isLoadingComplete) {
+    return null;
+  } else {
+    return (
+      <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} tokenCache={tokenCache}>
+        <InitialLayout />
+      </ClerkProvider>
+    )
+  }
 }
