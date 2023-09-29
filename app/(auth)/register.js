@@ -1,14 +1,15 @@
 import { TextInput, View, Pressable, Text, ActivityIndicator } from 'react-native';
-import { useSignUp } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { Logs } from 'expo'
+import { useAuth } from "../../context/auth";
+
 
 import styles from '../../components/auth/auth.style'
 import { COLORS } from '../../constants';
 
 const register = () => {
-	const { isLoaded, signUp, setActive } = useSignUp();
+	const { signUp } = useAuth();
 
 	const [emailAddress, setEmailAddress] = useState('');
 	const [password, setPassword] = useState('');
@@ -19,60 +20,31 @@ const register = () => {
 
 	Logs.enableExpoCliLogging();
 
-	console.log('testing log');
-	
 
 	const onSignUpPress = async () => {
-		if (!isLoaded) {
-			return;
-		}
 		setLoading(true);
 
-		console.log({
-			emailAddress,
-			password,
-			username,
-		});
-
 		try {
-			// Create the user on Clerk
-			await signUp.create({
+			const { data, error } = await signUp(
 				emailAddress,
 				password,
 				username,
-			});
-
-			// Send verification Email
-			await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-
-			// change the UI to verify the email address
-			setPendingVerification(true);
+			);
+			if (data) {
+				router.replace("/home");
+			} else {
+				alert(error);
+				// Alert.alert("Login Error", resp.error?.message);
+			}
 		} catch (err) {
-
 			console.log(err);
-			alert(err.errors[0].message);
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	const onPressVerify = async () => {
-		if (!isLoaded) {
-			return;
-		}
-		setLoading(true);
-
-		try {
-			const completeSignUp = await signUp.attemptEmailAddressVerification({
-				code
-			});
-
-			await setActive({ session: completeSignUp.createdSessionId });
-		} catch (err) {
-			alert(err.errors[0].message);
-		} finally {
-			setLoading(false);
-		}
+		console.log('loading');
 	};
 
 	return (
@@ -85,12 +57,14 @@ const register = () => {
 						<TextInput
 							placeholder="Username"
 							value={username}
-							onChangeText={(text) => setUsername(text)}
+							nativeID="userName"
+							onChangeText={(text) => setUsername(text.trim())}
 							style={styles.textInput}
 						/>
 					</View>
 					<View style={styles.inputView}>
 						<TextInput
+							nativeID="email"
 							autoCapitalize="none"
 							placeholder="example@email.com"
 							value={emailAddress}
@@ -102,6 +76,7 @@ const register = () => {
 						<TextInput
 							placeholder="password"
 							value={password}
+							nativeID="password"
 							onChangeText={(text) => setPassword(text)}
 							secureTextEntry
 							style={styles.textInput}
@@ -112,7 +87,7 @@ const register = () => {
 						{loading ? (
 							<ActivityIndicator size='large' color={COLORS.primary} />
 						) : (
-							<Text style={styles.primaryButtonText}>Sign up</Text>
+							<Text style={styles.primaryButtonText}>Create Account</Text>
 						)}
 					</Pressable>
 				</>

@@ -1,48 +1,8 @@
-import { useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
-import { Stack, Slot, useRouter, useSegments } from 'expo-router';
+import { useColorScheme } from 'react-native'
+import { Stack, Slot } from 'expo-router';
+
+import { Provider, useAuth } from '../context/auth';
 import useCachedResources from '../hook/useCachedResources'
-
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-// Cache the Clerk JWT
-const tokenCache = {
-  async getToken(key) {
-    try {
-      return SecureStore.getItemAsync(key);
-    } catch (error) {
-      return null;
-    }
-  },
-  async setToken(key, value) {
-    try {
-      return SecureStore.setItemAsync(key, value);
-    } catch (error) {
-      return;
-    }
-  }
-};
-
-const InitialLayout = () => {
-  const { isLoaded, isSignedIn } = useAuth();
-	const segments = useSegments();
-	const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    const inTabsGroup = segments[0] === '(auth)';
-    if (isSignedIn && !inTabsGroup) {
-      router.replace('/home');
-    } else if (!isSignedIn) {
-      router.replace('/login');
-    }
-
-  }, [isSignedIn])
-
-  return <Slot />;
-}
 
 export default function RootLayout() {
   const isLoadingComplete = useCachedResources();
@@ -51,9 +11,26 @@ export default function RootLayout() {
     return null;
   } else {
     return (
-      <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} tokenCache={tokenCache}>
+      <Provider>
         <InitialLayout />
-      </ClerkProvider>
+      </Provider>
     )
   }
+}
+
+const InitialLayout = () => {
+  const colorScheme = useColorScheme();
+  const { authInitialized, user } = useAuth();
+
+  if (!authInitialized && !user) return null;
+
+  return <Slot />
+  // return (
+  //   <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+  //     <Stack screenOptions={{ headerShown: false }}>
+  //       <Stack.Screen name="(tabs)" />
+  //       <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+  //     </Stack>
+  //   </ThemeProvider>
+  // );
 }

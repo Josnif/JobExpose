@@ -1,36 +1,39 @@
-import { useSignIn } from '@clerk/clerk-expo';
 import React, { useState } from 'react';
 import { View, TextInput, Text, Pressable, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter, Stack, Link } from 'expo-router';
+import { useAuth } from "../../context/auth";
 
 import styles from '../../components/auth/auth.style'
 import { COLORS } from '../../constants';
 
 const Login = () => {
     const router = useRouter();
-    const { signIn, setActive, isLoaded } = useSignIn();
+    const { signIn } = useAuth();
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
 
     const handleSigninPress = async () => {
         setLoading(true);
-        if (!isLoaded) {
-			return;
-		}
+        
 		try {
-			const completeSignIn = await signIn.create({
-				identifier: emailAddress,
-				password
-			});
+			const { data, error } = await signIn(
+                emailAddress,
+                password
+            );
 
-			// This indicates the user is signed in
-			await setActive({ session: completeSignIn.createdSessionId });
+            if (data) {
+                router.replace("/home");
+            } else {
+                alert(error);
+            }
 		} catch (err) {
-			alert(err.errors[0].message);
+			console.log(err);
 		} finally {
-			setLoading(false);
+            setLoading(false);
+            console.log('done');
 		}
+
     }
 
     return (
@@ -38,6 +41,7 @@ const Login = () => {
             <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.inputView}>
                 <TextInput
+                    nativeID="email"
                     autoCapitalize="none"
                     value={emailAddress}
                     style={styles.textInput}
