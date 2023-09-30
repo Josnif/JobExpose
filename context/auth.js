@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useRootNavigation, useRouter, useSegments } from 'expo-router';
+import { useRootNavigation, useRouter, useSegments, Redirect } from 'expo-router';
 import { appwrite } from '../lib/services/appwrite-service';
 
 const AuthContext = React.createContext(undefined);
@@ -32,12 +32,13 @@ export function Provider(props) {
             }
 
             const inAuthGroup = segments[0] === '(auth)';
+            const inAppGroup = segments[0] === '(app)';
 
             if (!authInitialized) return;
 
             if (!user && !inAuthGroup) {
                 router.push('/login');
-            } else if (user) {
+            } else if (user && !inAppGroup) {
                 router.push('/home');
             }
         }, [user, segments, authInitialized, isNavigationReady]);
@@ -55,7 +56,7 @@ export function Provider(props) {
             }
 
             setAuthInitialized(true);
-            console.log('initialize ', user);
+            // console.log('initialize ', user);
         })();
     }, []);
 
@@ -78,7 +79,6 @@ export function Provider(props) {
      */
     const login = async (email, password) => {
         try {
-            console.log(email, password);
             const response = await appwrite.account.createEmailSession(
                 email,
                 password
@@ -102,8 +102,6 @@ export function Provider(props) {
      */
     const createAccount = async (email, password, username) => {
         try {
-            console.log(email, password, username);
-
             await appwrite.account.create(
                 appwrite.ID.unique(),
                 email,

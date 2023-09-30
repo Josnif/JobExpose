@@ -17,6 +17,9 @@ import NearbyJobCard from "./common/cards/nearby/NearbyJobCard";
 
 // Authentication
 
+import ExternalLink from "./ExternalLink";
+import SidebarModal from "./common/sidebar/SidebarModal";
+
 export {
   ScreenHeaderBtn,
   Welcome,
@@ -28,5 +31,8 @@ export {
   JobFooter,
   Specifics,
   NearbyJobCard,
+
+  ExternalLink,
+  SidebarModal,
 
 };

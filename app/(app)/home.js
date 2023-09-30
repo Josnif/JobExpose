@@ -3,20 +3,28 @@ import { View, ScrollView, SafeAreaView } from "react-native"
 import { Stack, useRouter } from 'expo-router';
 
 import { COLORS, icons, images, SIZES } from '../../constants';
-import { Nearbyjobs, Popularjobs, ScreenHeaderBtn, Welcome } from '../../components'
+import { Nearbyjobs, Popularjobs, ScreenHeaderBtn, SidebarModal, Welcome } from '../../components'
 
 const Home = () => {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
+    const [openSidebar, setOpenSidebar] = useState(false)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
             <Stack.Screen
                 options={{
+                    headerShown: !openSidebar,
                     headerStyle: { backgroundColor: COLORS.lightWhite },
                     headerShadowVisibile: false,
                     headerLeft: () => (
-                        <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" />
+                        <ScreenHeaderBtn 
+                            iconUrl={icons.menu} 
+                            dimension="60%"
+                            handlePress={() => {
+                                setOpenSidebar(true);
+                            }}
+                        />
                     ),
                     headerRight: () => (
                         <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
@@ -47,6 +55,8 @@ const Home = () => {
                     
                 </View>
             </ScrollView>
+            
+            {openSidebar && <SidebarModal handleClose={() => setOpenSidebar(false)} />}
         </SafeAreaView>
     )
 }

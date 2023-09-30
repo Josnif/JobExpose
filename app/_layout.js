@@ -24,7 +24,12 @@ const InitialLayout = () => {
 
   if (!authInitialized && !user) return null;
 
-  return <Slot />
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(app)" />
+      <Stack.Screen name="(auth)" />
+    </Stack>
+  )
   // return (
   //   <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
   //     <Stack screenOptions={{ headerShown: false }}>
