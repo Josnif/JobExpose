@@ -4,17 +4,19 @@ import { useRouter } from 'expo-router'
 
 import styles from './welcome.style'
 import { icons, SIZES } from '../../../constants'
+import { useAuth } from '../../../context/auth'
 
 const jobTypes = ["Full-time", "Part-time", "Contractor"];
 
 const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
   const router = useRouter();
-  const [activeJobType, setActiveJobType] = useState("Full-time")
+  const [activeJobType, setActiveJobType] = useState("Full-time");
+  const { user } = useAuth();
 
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello Joboy</Text>
+        <Text style={styles.userName}>Hello {user?.name}</Text>
         <Text style={styles.welcomeMessage}>Find your perfect job</Text>
       </View>
 

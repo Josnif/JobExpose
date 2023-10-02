@@ -20,6 +20,8 @@ import NearbyJobCard from "./common/cards/nearby/NearbyJobCard";
 import ExternalLink from "./ExternalLink";
 import SidebarModal from "./common/sidebar/SidebarModal";
 
+import ProfileMenu from "./home/profile/ProfileMenu";
+
 export {
   ScreenHeaderBtn,
   Welcome,
@@ -34,5 +36,6 @@ export {
 
   ExternalLink,
   SidebarModal,
+  ProfileMenu
 
 };

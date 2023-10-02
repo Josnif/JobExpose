@@ -45,6 +45,9 @@ const styles = StyleSheet.create({
     menuView: {
         margin: SIZES.small,
         paddingLeft: SIZES.small,
+        paddingVertical: SIZES.small - 3,
+        flexDirection: "row",
+        columnGap: SIZES.small
     },
     menuText: {
         color: COLORS.primary,

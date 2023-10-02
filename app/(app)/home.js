@@ -3,12 +3,13 @@ import { View, ScrollView, SafeAreaView } from "react-native"
 import { Stack, useRouter } from 'expo-router';
 
 import { COLORS, icons, images, SIZES } from '../../constants';
-import { Nearbyjobs, Popularjobs, ScreenHeaderBtn, SidebarModal, Welcome } from '../../components'
+import { Nearbyjobs, Popularjobs, ScreenHeaderBtn, SidebarModal, Welcome, ProfileMenu } from '../../components'
 
 const Home = () => {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
-    const [openSidebar, setOpenSidebar] = useState(false)
+    const [openSidebar, setOpenSidebar] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
@@ -27,11 +28,19 @@ const Home = () => {
                         />
                     ),
                     headerRight: () => (
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
+                        <ScreenHeaderBtn 
+                            iconUrl={images.profile} 
+                            dimension="100%" 
+                            handlePress={() => {
+                                // setOpenProfile(!openProfile)
+                            }}
+                        />
                     ),
                     headerTitle: ""
                 }}
             />
+            
+            {openProfile ? <ProfileMenu /> : null}
             
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View
