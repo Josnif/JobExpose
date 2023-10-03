@@ -52,7 +52,7 @@ const Login = () => {
                 />
             </View>
 
-            <View style={styles.header(400)}>
+            <View style={styles.header(350)}>
                 {showResetForm && (
                     <View style={styles.headerBackBtn}>
                         <ScreenHeaderBtn  

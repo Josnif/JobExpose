@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingHorizontal: 20,
 		marginHorizontal: 'auto',
-		marginTop: -100,
+		marginTop: -80,
 		alignItems: 'center',
 		width: '90%',
 		height: "auto",

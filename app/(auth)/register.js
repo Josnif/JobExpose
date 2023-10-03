@@ -54,7 +54,7 @@ const register = () => {
 		<SafeAreaView style={styles.container}>
 			<Stack.Screen options={{ headerBackVisible: !pendingVerification, headerShown: false }} />
 
-			<View style={styles.header(400)}>
+			<View style={styles.header(380)}>
 				<View style={styles.headerBackBtn}>
 					<ScreenHeaderBtn  
 						iconUrl={icons.left}
