@@ -1,13 +1,11 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../../constants";
+import { COLORS, SIZES, SHADOWS, FONT } from "../../constants";
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
-		justifyContent: "center",
-		paddingHorizontal: 20,
-		alignItems: 'center'
+		alignItems: "center"
 	},
 
 	// container: {
@@ -20,7 +18,53 @@ const styles = StyleSheet.create({
 		margin: 8,
 		alignItems: 'center'
 	},
-	
+
+	headerBackBtn: {
+		position: 'absolute',
+		top: SIZES.xSmall / 2,
+		left: 5,
+		zIndex: 50
+	},
+
+	header: (height=400) => ({
+		width: '100%',
+		height: height,
+		backgroundColor: COLORS.primary,
+		margin: 0,
+		alignItems: "center",
+		justifyContent: "center"
+	}),
+
+	headerLogo: {
+		borderRadius: 50,
+		width: 100,
+		height: 100,
+		marginTop: -SIZES.large
+	},
+
+	formArea: {
+		borderRadius: SIZES.large,
+		padding: SIZES.large,
+		backgroundColor: "#fff",
+		justifyContent: "center",
+		paddingHorizontal: 20,
+		marginHorizontal: 'auto',
+		marginTop: -100,
+		alignItems: 'center',
+		width: '90%',
+		height: "auto",
+		...SHADOWS.small
+	},
+
+	formHeading: {
+		paddingTop: SIZES.small,
+		paddingBottom: SIZES.large + 5
+	},
+
+	formHeadingText: {
+		fontFamily: FONT.bold,
+		fontSize: SIZES.xxLarge,
+	},	
 	
 	inputView: {
 		borderRadius: SIZES.xSmall / 2,
@@ -59,13 +103,12 @@ const styles = StyleSheet.create({
 		color: "#000",
 		fontSize: 20,
 		fontWeight: "bold",
-		marginBottom: 20,
+		marginBottom: 5,
 	},
 	
 	footer: {
 		color: "#000",
 		marginTop: 20,
-		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "flex-start",
 	},
@@ -84,6 +127,21 @@ const styles = StyleSheet.create({
 	secondaryButtonText: {
 		color: "#000",
 		fontWeight: "bold",
+	},
+
+	backdropContainer: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		width: '0%',
+		height: '100%',
+		zIndex: -1,
+	},
+	backdropImage: {
+		width: '100%',
+		height: '100%',
 	},
 	
 	  oauthView: {
